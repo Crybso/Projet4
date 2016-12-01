@@ -14,7 +14,7 @@ def add_depense(depenses):
         try:
             float(Input[2])
         except:
-            flag = False
+            return depenses
         #Vérifie que le nombre de décimale(s) soit <=2
         if "." in Input[2]:
             if len(Input[2].split(".")[1]) <= 2:
