@@ -31,31 +31,29 @@ def add_depense(depenses):
     
 def getInput(depenses):
     """
-    Retourne une liste contenant [nom, catégorie, montant]
+    Retourne le tuple (nom, cat, montant)
     et None si l'input de l'utilisateur n'est pas correct.
     """
-    Input = input().split(" ")
     flag = False
-    if len(Input) == 3 and Input[0] in depenses:
-        #Vérifie que le montant soit convertible en float
-        try:
-            float(Input[2])
-        except:
-            pass
-        #Montant convertible en float
-        else:
-            #Décimales?
-            if "." in Input[2]:
-                #Vérifie que le nombre de décimales soit <= 2
-                if len(Input[2].split(".")[1]) <= 2:
+    Input = input().split(" ")
+    if len(Input) == 3:
+        nom, cat, montant = Input
+        #Vérifie que le nom soit une clef du dictionnaire
+        if nom in depenses:
+            #Vérifie que le montant soit convertible en float
+            if montant.replace(".","",1).isdigit():
+                #Si il y a des démicales
+                if "." in montant:
+                    #Vérifie que leur nombres soit <= 2
+                    if len(montant.split(".")[1]) <= 2:
+                        flag = True
+                        montant = float(montant)
+                #Sans décimale, pas d'erreur possible
+                else:
                     flag = True
-            #Pas de décimales
-            else: flag = True
-            #Converti le montant en float
-            Input[2] = float(Input[2])
-        finally:
-            if flag:
-                return Input
+                    montant = int(montant)
+    if flag:
+        return nom, cat, montant
     return None
     
 def display_depenses(depenses):
