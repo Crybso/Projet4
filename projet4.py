@@ -49,3 +49,14 @@ def getInput(depenses):
             if flag:
                 return Input
     return None
+    
+def display_depenses(depenses):
+    """
+    Affiche le dictionnaire depenses
+    """
+    for name in depenses:
+        print(name,"a dépensé :")
+        for cat in depenses[name]:
+            print("- ", cat, end=" :")
+            for montant in depenses[name][cat]:
+                print(str(montant).strip("[]"))
