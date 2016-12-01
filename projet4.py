@@ -72,7 +72,7 @@ def display_depenses(depenses):
     
 def compute_depenses_personne(depenses):
     """
-     Retourne un dictionnaire ayant comme clés les noms des personnes
+     Retourne un dictionnaire ayant comme clefs les noms des personnes
      et comme valeur le montant total dépensé par les différentes personnes
      """
     dico = {}
@@ -82,4 +82,19 @@ def compute_depenses_personne(depenses):
             for montant in depenses[name][cat]:
                 somme += montant
         dico[name] = somme
+    return dico
+    
+def compute_depenses_cat(depenses):
+    """
+    Retourne un dictionnaire ayant clefs les catégories actuelles
+    et comme valeur le montant total dépensé dans les différentes catégories
+    """
+    dico = {}
+    somme = 0
+    for name in depenses:
+        for cat in depenses[name]:
+            if cat not in dico:
+                dico[cat] = 0
+            for montant in depenses[name][cat]:
+                dico[cat] += montant
     return dico
