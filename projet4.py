@@ -1,5 +1,3 @@
-
-
 def encode_noms(noms):
     """
     Retourne un dictionnaire de dictionnaires vides
@@ -50,4 +48,4 @@ def getInput(depenses):
         finally:
             if flag:
                 return Input
-    return None
+return None
