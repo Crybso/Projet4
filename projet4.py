@@ -8,14 +8,13 @@ def encode_noms(noms):
     
 def add_depense(depenses):
     msg = 'Ajouter une dépense avec le format "nom  catégorie montant": '
-
     Input = input(msg).split(" ")
     flag = False
     if len(Input) == 3 and Input[0] in depenses:
         try:
             float(Input[2])
         except:
-            return depenses
+            flag = False
         #Vérifie que le nombre de décimale(s) soit <=2
         if "." in Input[2]:
             if len(Input[2].split(".")[1]) <= 2:
