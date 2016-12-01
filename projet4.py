@@ -1,3 +1,9 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+depenses = {'Cedric': {'trajet' : [125], 'repas': [43,52]},
+'Fabio': {'repas': [46,57],'trajet' : [21]}, 'Francois': {'hotel': [140]}}
+
 def encode_noms(noms):
     """
     Retourne un dictionnaire de dictionnaires vides
@@ -17,9 +23,9 @@ def add_depense(depenses):
     if Input:
         nom, cat, montant = Input
         if cat in depenses[nom]:
-            depenses[nom].append(montant)
+            depenses[nom][cat].append(montant)
         else:
-            depenses[nom] = [montant]
+            depenses[nom][cat] = [montant]
     return depenses
     
     
@@ -34,6 +40,8 @@ def getInput(depenses):
         #Vérifie que le montant soit convertible en float
         try:
             float(Input[2])
+        except:
+            pass
         #Montant convertible en float
         else:
             #Décimales?
@@ -55,8 +63,23 @@ def display_depenses(depenses):
     Affiche le dictionnaire depenses
     """
     for name in depenses:
-        print(name,"a dépensé :")
+        print("\n{} a dépensé :".format(name))
         for cat in depenses[name]:
-            print("- ", cat, end=" :")
+            print("-", cat, end=" : ")
+            montant = depenses[name][cat]
+            print(str(montant).strip("[]"))
+    return
+    
+def compute_depenses_personne(depenses):
+    """
+     Retourne un dictionnaire ayant comme clés les noms des personnes
+     et comme valeur le montant total dépensé par les différentes personnes
+     """
+    dico = {}
+    for name in depenses:
+        somme = 0
+        for cat in depenses[name]:
             for montant in depenses[name][cat]:
-                print(str(montant).strip("[]"))
+                somme += montant
+        dico[name] = somme
+    return dico
