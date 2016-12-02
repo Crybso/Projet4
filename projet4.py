@@ -135,7 +135,7 @@ def compute_comptes(depenses):
                     comptes[debiteur][crediteur] = 0
                     #si le montant redevable est supérieur au montant du au créditeur
                     if debit + credit > 0:#précision?
-                        #le debiteur rembourse alors le montant redevaable
+                        #le debiteur rembourse alors le montant du au créditeur
                         comptes[debiteur][crediteur] += round(credit, 2)
                         comptes_personne[debiteur] -= round(credit, 2)
                     else:
