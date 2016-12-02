@@ -162,7 +162,6 @@ def compute_comptes(depenses):
                         comptes[debiteur][crediteur] += debit
                         comptes_personne[debiteur] -= debit
                         comptes_personne[crediteur] += debit
-    print(comptes_personne)#debug
     return comptes
 
 def display_comptes(comptes):
