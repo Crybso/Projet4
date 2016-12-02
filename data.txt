@@ -1,0 +1,5 @@
+Pierre hotel 8.50
+Jean hotel 26
+Pierre repas 10.5432
+Pierre inconnu ??
+Pierre inconnu 2

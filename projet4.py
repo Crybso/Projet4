@@ -28,17 +28,19 @@ def add_depense(depenses):
     Retourne le dictionnaire depenses mis à jour.
     """
     print('Ajouter une dépense avec le format "nom  catégorie montant": ')
-    Input = getInput(depenses)
+    Input = get_Input(depenses)
     if Input:
         nom, cat, montant = Input
         if cat in depenses[nom]:
             depenses[nom][cat].append(montant)
         else:
             depenses[nom][cat] = [montant]
+    else:
+        print("Encodage impossible, veuillez réessayer.")
     return depenses
     
     
-def getInput(depenses):
+def get_Input(depenses):
     """
     Retourne le tuple (nom, cat, montant)
     et None si l'input de l'utilisateur n'est pas correct.
@@ -57,10 +59,13 @@ def getInput(depenses):
                     if len(montant.split(".")[1]) <= 2:
                         flag = True
                         montant = float(montant)
+                    else: print("Trop de décimales.")
                 #Sans décimale, pas d'erreur possible
                 else:
                     flag = True
                     montant = int(montant)
+            else: print("Impossible de convertir le montant en nombre.")
+        else: print("Le nom entré n'est pas présent dans les comptes.")
     if flag:
         return nom, cat, montant
     return None
@@ -139,7 +144,7 @@ def compute_comptes(depenses):
             comptes[debiteur] = {}
             for crediteur in depenses:
                 credit = comptes_personne[crediteur]
-                if comptes_personne[crediteur] < 0:
+                if credit < 0:
                     #on ajoute une clef pour le crediteur
                     comptes[debiteur][crediteur] = 0
                     #si le montant redevable est supérieur au montant du au créditeur
@@ -185,22 +190,22 @@ def compta(noms):
             display_comptes(compute_comptes(depenses))
         elif choix == 6:#ou juste else: mais moins clair.
             flag = True
+        else:
+            print("Choix non reconnu, veuillez réessayer.")
     print("Au-revoir")
     return
 def get_choice():
-    flag = False
-    while not flag:
-        choice = input()
-        if len(choice) == 1 and choice in "123456":
-            flag = True
-    return int(choice)
+    choice = input()
+    if len(choice) == 1 and choice in "123456":
+        return int(choice)
+    return -1
 
 def display_menu():
-    print("Que vouez-vous faire ?")
+    print("\nQue vouez-vous faire ?")
     print("1: Ajouter une dépense\n2: Voir les dépenses")
     print("3: Voir les dépenses par personne")
     print("4: Voir les dépenses par catégorie")
-    print("5: Faire les comptes\n6: Sortir de l'application")
+    print("5: Faire les comptes\n6: Sortir de l'application\n")
     return
 
 if __name__ == "__main__":
