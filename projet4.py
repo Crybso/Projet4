@@ -1,8 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-depenses = {'Cedric': {'trajet' : [125], 'repas': [43,52]},
-'Fabio': {'repas': [46,57],'trajet' : [21]}, 'Francois': {'hotel': [140]}}
+#depenses = {'Cedric': {'trajet' : [125], 'repas': [43,52]},
+#'Fabio': {'repas': [46,57],'trajet' : [21]}, 'Francois': {'hotel': [140]}}
+"""
+to-do:
+    Si dépense = int -> int
+    Si dépense = 0 (pour la personne) -> don't print
+    Passages de lignes pour display_depenses et autres
+    Vérifier que l'algorithme fonctionne tout le temps bien (bons comptes
+    et aussi comptes efficaces, minimum de transactions...)
+"""
+import sys
 
 def encode_noms(noms):
     """
@@ -146,3 +155,56 @@ def compute_comptes(depenses):
                         comptes_personne[crediteur] += debit
     print(comptes_personne)#debug
     return comptes
+
+def display_comptes(comptes):
+    for name in comptes:
+        print(name,"doit a :")
+        for subname in comptes[name]:
+            print("- {} : {}".format(subname,comptes[name][subname]))
+    return
+    
+def compta(noms):
+    if noms:
+        depenses = encode_noms(noms)
+    else:
+        print("Erreur d'encodage des noms")
+        return
+    flag = False
+    while not flag:
+        display_menu()
+        choix = get_choice()
+        if choix == 1:
+            depenses = add_depense(depenses)#re-assignation nécessaire?
+        elif choix == 2:
+            display_depenses(depenses)
+        elif choix == 3:
+            display_depenses_personne_cat(compute_depenses_personne(depenses))
+        elif choix == 4:
+            display_depenses_personne_cat(compute_depenses_cat(depenses))
+        elif choix == 5:
+            display_comptes(compute_comptes(depenses))
+        elif choix == 6:#ou juste else: mais moins clair.
+            flag = True
+    print("Au-revoir")
+    return
+def get_choice():
+    flag = False
+    while not flag:
+        choice = input()
+        if len(choice) == 1 and choice in "123456":
+            flag = True
+    return int(choice)
+
+def display_menu():
+    print("Que vouez-vous faire ?")
+    print("1: Ajouter une dépense\n2: Voir les dépenses")
+    print("3: Voir les dépenses par personne")
+    print("4: Voir les dépenses par catégorie")
+    print("5: Faire les comptes\n6: Sortir de l'application")
+    return
+
+if __name__ == "__main__":
+    noms = []
+    for arg in sys.argv[1:]:
+        noms.append(arg)
+    compta(noms)
