@@ -105,3 +105,41 @@ def display_depenses_personne_cat(depensesTot):
     for key, value in depensesTot.items():
         print(key,":",value)
     return
+    
+def compute_comptes(depenses):
+    """
+    Effectue les comptes.
+    Retourne un dictionnaire avec une clef pour chaque personne redevable
+    Et comme valeur un dictionnaire avec le montant du à chaque personne.
+    """
+    comptes = {}
+    total = 0
+    nb_personnes = len(depenses)
+    comptes_personne = compute_depenses_personne(depenses)
+    for value in comptes_personne.values():
+        total += value
+    for name in depenses:
+        #le dictionnaire comptes_personne contient contient pour chaque personne
+        #le montant du ou l'avoir (respectivement positif et négatif)
+        comptes_personne[name] = total/nb_personnes - comptes_personne[name]
+    #on cherche une personne devant de l'argent (debiteur)
+    for debiteur in depenses:
+        debit = comptes_personne[debiteur]
+        if debit > 0:
+            #on créé une clef et un dictionnaire pour cette personne
+            comptes[debiteur] = {}
+            for crediteur in depenses:
+                credit = comptes_personne[crediteur]
+                if comptes_personne[crediteur] < 0:
+                    #on ajoute une clef pour le crediteur
+                    comptes[debiteur][crediteur] = 0
+                    #si le montant redevable est supérieur au montant du au créditeur
+                    if debit + credit > 0:#précision?
+                        #le debiteur rembourse alors le montant redevaable
+                        comptes[debiteur][crediteur] += round(credit, 2)
+                        comptes_personne[debiteur] -= round(credit, 2)
+                    else:
+                        #sinon le debiteur rembourse le montant qu'il doit
+                        comptes[debiteur][crediteur] += round(debit, 2)
+                        comptes_personne[debiteur] -= round(debit, 2)
+    return comptes
