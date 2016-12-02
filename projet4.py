@@ -2,13 +2,6 @@
 # -*- coding: utf-8 -*-
 import sys
 
-"""
-to-do:
-    Si dépense = int -> int ? #exemple: if int(str(credit).split(".")[1]) < 1:
-    Si dépense = 0 (pour la personne) -> don't print?
-"""
-
-
 def encode_noms(noms):
     """
     Retourne un dictionnaire de dictionnaires vides
@@ -18,24 +11,27 @@ def encode_noms(noms):
     for nom in noms:
         dico[nom] = {}
     return dico
-    
+
 def add_depense(depenses):
     """
     Retourne le dictionnaire depenses mis à jour.
     """
     print('Ajouter une dépense avec le format "nom  catégorie montant": ')
     Input = get_Input(depenses)
+    #si l'entrée de l'utilisateur est valide
     if Input:
         nom, cat, montant = Input
+        #si la catégorie existe, ajout du montant à la fin de la liste
         if cat in depenses[nom]:
             depenses[nom][cat].append(montant)
+        #sinon, création de la clef avec liste associée contenant la dépense
         else:
             depenses[nom][cat] = [montant]
+    #si l'entrée n'est pas valide
     else:
         print("Encodage impossible, veuillez réessayer.")
     return depenses
-    
-    
+
 def get_Input(depenses):
     """
     Retourne le tuple (nom, cat, montant)
@@ -57,7 +53,7 @@ def get_Input(depenses):
                         montant = float(montant)
                     else:
                         print("Veuillez limiter le nombre de décimales à deux.")
-                #Sans décimale, pas d'erreur possible
+                #Sans décimales, pas d'erreur possible
                 else:
                     flag = True
                     montant = int(montant)
@@ -72,8 +68,12 @@ def display_depenses(depenses):
     Affiche le dictionnaire depenses
     """
     for name in depenses:
-        print("\n{} a dépensé :".format(name))
+        #si le dictionnaire de la personne contient des dépenses
+        if len(depenses[name]) > 0:
+            #affiche le nom de la personne
+            print("\n{} a dépensé :".format(name))
         for cat in depenses[name]:
+            #affiche la catégorie suivie des montants associés
             print("-", cat, end=" : ")
             montant = depenses[name][cat]
             print(str(montant).strip("[]"))
@@ -86,13 +86,15 @@ def compute_depenses_personne(depenses):
     """
     totPers = {}
     for name in depenses:
+        #initialise la somme pour la personne
         somme = 0
         for cat in depenses[name]:
             for montant in depenses[name][cat]:
                 somme += montant
+        #ajoute la clef et la la somme pour la personne
         totPers[name] = somme
     return totPers
-    
+
 def compute_depenses_cat(depenses):
     """
     Retourne un dictionnaire ayant comme clefs les catégories actuelles
@@ -103,11 +105,13 @@ def compute_depenses_cat(depenses):
     for name in depenses:
         for cat in depenses[name]:
             if cat not in totCat:
+                #création clef avec valeur 0 si la catégorie est nouvelle
                 totCat[cat] = 0
             for montant in depenses[name][cat]:
+                #incrém. valeur de cat par le montant dépense par la personne
                 totCat[cat] += montant
     return totCat
-    
+
 def display_depenses_personne_cat(depensesTot):
     """
     Affiche le dictionnaire depensesTot qui est le résultat de
@@ -116,7 +120,7 @@ def display_depenses_personne_cat(depensesTot):
     for key, value in depensesTot.items():
         print(key,":",value)
     return
-    
+
 def compute_comptes(depenses):
     """
     Effectue les comptes.
@@ -170,18 +174,21 @@ def display_comptes(comptes):
         for subname in comptes[name]:
             print("- {} : {}".format(subname,comptes[name][subname]))
     return
-    
+
 def compta(noms):
     """
     Initialise le dictionnaire principal depenses,
     et la boucle boucle principale qui attend le choix de l'utilisateur.
     """
-    if noms:
-        depenses = encode_noms(noms)
-    else:
+    #si la liste noms n'existe pas
+    if not noms:
         print("Erreur d'encodage des noms")
         return
+    #si elle existe, initiation du dictionnaire depenses
+    else:
+        depenses = encode_noms(noms)
     flag = False
+    #boucle principale, effectue le choix de l'utilisateur.
     while not flag:
         display_menu()
         choix = get_choice()
@@ -199,9 +206,9 @@ def compta(noms):
             flag = True
         else:
             print("Choix non reconnu, veuillez réessayer.")
-    print("Au-revoir")
+    print("Au-revoir!")
     return
-    
+
 def get_choice():
     """
     Retourne l'input de l'utilisateur si il est correct.
