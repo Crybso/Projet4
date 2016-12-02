@@ -1,22 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import sys
 
-#depenses = {'Cedric': {'trajet' : [125], 'repas': [43,52]},
-#'Fabio': {'repas': [46,57],'trajet' : [21]}, 'Francois': {'hotel': [140]}}
 """
 to-do:
-    Si dépense = int -> int
-    Si dépense = 0 (pour la personne) -> don't print
-    Passages de lignes pour display_depenses et autres
-    Vérifier que l'algorithme fonctionne tout le temps bien (bons comptes
-    et aussi comptes efficaces, minimum de transactions...)
+    Si dépense = int -> int ? #exemple: if int(str(credit).split(".")[1]) < 1:
+    Si dépense = 0 (pour la personne) -> don't print?
 """
-import sys
+
 
 def encode_noms(noms):
     """
     Retourne un dictionnaire de dictionnaires vides
-    avec une clef par personne.
+    avec une clef par nom dans la liste noms.
     """
     dico = {}
     for nom in noms:
@@ -59,7 +55,8 @@ def get_Input(depenses):
                     if len(montant.split(".")[1]) <= 2:
                         flag = True
                         montant = float(montant)
-                    else: print("Trop de décimales.")
+                    else:
+                        print("Veuillez limiter le nombre de décimales à deux.")
                 #Sans décimale, pas d'erreur possible
                 else:
                     flag = True
@@ -87,29 +84,29 @@ def compute_depenses_personne(depenses):
     Retourne un dictionnaire ayant comme clefs les noms des personnes
     et comme valeur le montant total dépensé par les différentes personnes
     """
-    dico = {}
+    totPers = {}
     for name in depenses:
         somme = 0
         for cat in depenses[name]:
             for montant in depenses[name][cat]:
                 somme += montant
-        dico[name] = somme
-    return dico
+        totPers[name] = somme
+    return totPers
     
 def compute_depenses_cat(depenses):
     """
-    Retourne un dictionnaire ayant clefs les catégories actuelles
+    Retourne un dictionnaire ayant comme clefs les catégories actuelles
     et comme valeur le montant total dépensé dans les différentes catégories
     """
-    dico = {}
+    totCat = {}
     somme = 0
     for name in depenses:
         for cat in depenses[name]:
-            if cat not in dico:
-                dico[cat] = 0
+            if cat not in totCat:
+                totCat[cat] = 0
             for montant in depenses[name][cat]:
-                dico[cat] += montant
-    return dico
+                totCat[cat] += montant
+    return totCat
     
 def display_depenses_personne_cat(depensesTot):
     """
@@ -124,18 +121,20 @@ def compute_comptes(depenses):
     """
     Effectue les comptes.
     Retourne un dictionnaire avec une clef pour chaque personne redevable
-    Et comme valeur un dictionnaire avec le montant du à chaque personne.
+    Et comme valeur un dictionnaire avec le montant dû à chaque personne.
     """
     comptes = {}
     total = 0
     nb_personnes = len(depenses)
+    #dictionnaire contenant les dépenses de chaque personne
     comptes_personne = compute_depenses_personne(depenses)
     for value in comptes_personne.values():
         total += value
     for name in depenses:
-        #le dictionnaire comptes_personne contient contient pour chaque personne
-        #le montant du ou l'avoir (respectivement positif et négatif)
-        comptes_personne[name] = round(total/nb_personnes-comptes_personne[name],2)
+        #ce dictionnaire a comme valeur pour chaque personne son compte, càd
+        #la soustraction de la part totale à payer moins le montant déjà payé
+        compte = round(total/nb_personnes-comptes_personne[name],2)
+        comptes_personne[name] = compte
     #on cherche une personne devant de l'argent (debiteur)
     for debiteur in depenses:
         debit = comptes_personne[debiteur]
@@ -147,9 +146,10 @@ def compute_comptes(depenses):
                 if credit < 0:
                     #on ajoute une clef pour le crediteur
                     comptes[debiteur][crediteur] = 0
-                    #si le montant redevable est supérieur au montant du au créditeur
-                    if debit + credit > 0:#précision?
-                        #le debiteur rembourse alors le montant du au créditeur:
+                    #si le montant redevable est supérieur au montant 
+                    #dû au créditeur
+                    if debit + credit > 0:
+                        #le debiteur rembourse alors le montant dû au créditeur
                         comptes[debiteur][crediteur] += -credit
                         comptes_personne[debiteur] -= -credit
                         comptes_personne[crediteur] += -credit
@@ -162,6 +162,9 @@ def compute_comptes(depenses):
     return comptes
 
 def display_comptes(comptes):
+    """
+    Affiche le dictionnaire comptes de la fonction compute_comptes
+    """
     for name in comptes:
         print(name,"doit a :")
         for subname in comptes[name]:
@@ -169,6 +172,10 @@ def display_comptes(comptes):
     return
     
 def compta(noms):
+    """
+    Initialise le dictionnaire principal depenses,
+    et la boucle boucle principale qui attend le choix de l'utilisateur.
+    """
     if noms:
         depenses = encode_noms(noms)
     else:
@@ -179,7 +186,7 @@ def compta(noms):
         display_menu()
         choix = get_choice()
         if choix == 1:
-            depenses = add_depense(depenses)#re-assignation nécessaire?
+            depenses = add_depense(depenses)
         elif choix == 2:
             display_depenses(depenses)
         elif choix == 3:
@@ -188,19 +195,26 @@ def compta(noms):
             display_depenses_personne_cat(compute_depenses_cat(depenses))
         elif choix == 5:
             display_comptes(compute_comptes(depenses))
-        elif choix == 6:#ou juste else: mais moins clair.
+        elif choix == 6:
             flag = True
         else:
             print("Choix non reconnu, veuillez réessayer.")
     print("Au-revoir")
     return
+    
 def get_choice():
+    """
+    Retourne l'input de l'utilisateur si il est correct.
+    """
     choice = input()
     if len(choice) == 1 and choice in "123456":
         return int(choice)
     return -1
 
 def display_menu():
+    """
+    Affiche le menu principal.
+    """
     print("\nQue vouez-vous faire ?")
     print("1: Ajouter une dépense\n2: Voir les dépenses")
     print("3: Voir les dépenses par personne")
@@ -209,7 +223,9 @@ def display_menu():
     return
 
 if __name__ == "__main__":
+    #création de la liste noms
     noms = []
     for arg in sys.argv[1:]:
         noms.append(arg)
+    #initialisation du programme avec cette liste
     compta(noms)
