@@ -121,7 +121,7 @@ def compute_comptes(depenses):
     for name in depenses:
         #le dictionnaire comptes_personne contient contient pour chaque personne
         #le montant du ou l'avoir (respectivement positif et négatif)
-        comptes_personne[name] = total/nb_personnes - comptes_personne[name]
+        comptes_personne[name] = round(total/nb_personnes-comptes_personne[name],2)
     #on cherche une personne devant de l'argent (debiteur)
     for debiteur in depenses:
         debit = comptes_personne[debiteur]
@@ -135,11 +135,14 @@ def compute_comptes(depenses):
                     comptes[debiteur][crediteur] = 0
                     #si le montant redevable est supérieur au montant du au créditeur
                     if debit + credit > 0:#précision?
-                        #le debiteur rembourse alors le montant du au créditeur
-                        comptes[debiteur][crediteur] += round(credit, 2)
-                        comptes_personne[debiteur] -= round(credit, 2)
+                        #le debiteur rembourse alors le montant du au créditeur:
+                        comptes[debiteur][crediteur] += -credit
+                        comptes_personne[debiteur] -= -credit
+                        comptes_personne[crediteur] += -credit
                     else:
                         #sinon le debiteur rembourse le montant qu'il doit
-                        comptes[debiteur][crediteur] += round(debit, 2)
-                        comptes_personne[debiteur] -= round(debit, 2)
+                        comptes[debiteur][crediteur] += debit
+                        comptes_personne[debiteur] -= debit
+                        comptes_personne[crediteur] += debit
+    print(comptes_personne)#debug
     return comptes
