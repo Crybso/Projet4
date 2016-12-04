@@ -5,7 +5,7 @@ import sys
 def encode_noms(noms):
     """
     Retourne un dictionnaire de dictionnaires vides
-    avec une clef pour chaque nom de liste noms.
+    avec une clef pour chaque nom de la liste noms.
     """
     dico = {}
     for nom in noms:
