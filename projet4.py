@@ -5,7 +5,7 @@ import sys
 def encode_noms(noms):
     """
     Retourne un dictionnaire de dictionnaires vides
-    avec une clef par nom dans la liste noms.
+    avec une clef pour chaque nom de liste noms.
     """
     dico = {}
     for nom in noms:
@@ -176,8 +176,8 @@ def display_comptes(comptes):
 
 def compta(noms):
     """
-    Initialise le dictionnaire principal depenses,
-    et la boucle boucle principale qui attend le choix de l'utilisateur.
+    Initialise le dictionnaire principal depenses avec la liste noms
+    et la boucle principale qui attend le choix de l'utilisateur.
     """
     #si la liste noms n'existe pas
     if not noms:
@@ -210,7 +210,7 @@ def compta(noms):
 
 def get_choice():
     """
-    Retourne l'input de l'utilisateur si il est correct.
+    Retourne le chiffre entre 1 et 6 choisi par l'utilisateur sinon -1
     """
     choice = input()
     if len(choice) == 1 and choice in "123456":
@@ -221,7 +221,7 @@ def display_menu():
     """
     Affiche le menu principal.
     """
-    print("\nQue vouez-vous faire ?")
+    print("\nQue voulez-vous faire ?")
     print("1: Ajouter une dépense\n2: Voir les dépenses")
     print("3: Voir les dépenses par personne")
     print("4: Voir les dépenses par catégorie")
